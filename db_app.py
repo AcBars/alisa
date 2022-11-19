@@ -72,7 +72,8 @@ def get_version():
             connection.close()
             print("Соединение с SQLite закрыто")
 
-
 # get_version()
-read('subjects')
-exit()
+# read('students')
+# read('subjects')
+# read('classes')
+# exit()
