@@ -1,18 +1,11 @@
 import sqlite3
 from enum import Enum
-import crud.subjects
-import crud.classes
+from crud import subjects
+from crud import classes
+from crud import students
+from crud import scheduler
 
 
-
-class Weekday(Enum):
-    MONDAY = 1
-    TUESDAY = 2
-    WEDNESDAY = 3
-    THURSDAY = 4
-    FRIDAY = 5
-    SATURDAY = 6
-    SUNDAY = 7
 
 # connection = sqlite3.connect('alisa.db')
 # cursor = connection.cursor()
@@ -108,7 +101,6 @@ def get_version():
             print("Соединение с SQLite закрыто")
 
 
-
 def delete(id):
     try:
         connect = sqlite3.connect('sqlite_python.db')
@@ -129,16 +121,18 @@ def delete(id):
             print("Соединение с SQLite закрыто")
 
 
-
-
 # get_version()
-# read('students')
-# read('subjects')
-# read('classes')
 # read('schedule')
 # update('students')
 
 
-# crud.subjects.insert_subject('Программирование')
-# crud.classes.insert_classes(2,'Г')
+# subjects.insert_subject('Программирование')
+# read('subjects')
+# classes.insert_classes(2,'Г')
+# read('classes')
+# students.insert_student('Андрей', 'Миронов', 8)
+# read('students')
+scheduler.insert_schedule(1, '09:00', 2, 2)
+read('schedule')
+
 exit()
