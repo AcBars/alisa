@@ -1,14 +1,15 @@
 import sqlite3
 
 
-def insert_classes(level, symbol):
+def insert(level, symbol):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute(''' INSERT INTO classes (level, symbol) VALUES(?, ?) ''',
                    (level, symbol))
     conn.commit()
 
-def get_classes():
+
+def get_all():
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT * FROM classes''')
@@ -17,7 +18,8 @@ def get_classes():
         data.append(row)
     return data
 
-def get_class(id_class):
+
+def get(id_class):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_class, level, symbol 
@@ -27,3 +29,13 @@ def get_class(id_class):
     for row in cursor.fetchall():
         data.append(row)
     return data
+
+
+def update(id_class, level, symbol):
+    conn = sqlite3.connect('alisa.db')
+    cursor = conn.cursor()
+    cursor.execute('''UPDATE classes 
+                    SET level = ?, symbol = ? 
+                    WHERE  id_class = ?''',
+                   (level, symbol, id_class))
+    conn.commit()

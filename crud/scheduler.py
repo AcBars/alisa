@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def insert_schedule(id_week, time_start, id_class, id_subject):
+def insert(id_week, time_start, id_class, id_subject):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute(''' INSERT INTO schedule 
@@ -11,7 +11,7 @@ def insert_schedule(id_week, time_start, id_class, id_subject):
     conn.commit()
 
 
-def get_schedules():
+def get_all():
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_week, time_start, id_class, id_subject 
@@ -22,7 +22,7 @@ def get_schedules():
     return data
 
 
-def get_schedule(id_schedule):
+def get(id_schedule):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_week, time_start, id_class, id_subject 
@@ -32,3 +32,15 @@ def get_schedule(id_schedule):
     for row in cursor.fetchall():
         data.append(row)
     return data
+
+
+def update(id_schedule, id_week, time_start, id_class, id_subject):
+    conn = sqlite3.connect('alisa.db')
+    cursor = conn.cursor()
+    cursor.execute('''UPDATE schedule SET id_week = ?,
+                        time_start = ?, 
+                        id_class = ?,
+                        id_subject = ?
+                        WHERE  id_schedule = ?''',
+                   (id_week, time_start, id_class, id_subject, id_schedule))
+    conn.commit()

@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def insert_student(first_name, second_name, id_class):
+def insert(first_name, second_name, id_class):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''  INSERT INTO students (first_name, second_name, id_class) 
@@ -9,7 +9,7 @@ def insert_student(first_name, second_name, id_class):
                         (first_name, second_name, id_class))
     conn.commit()
 
-def get_students():
+def get_all():
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_student, first_name, second_name, id_class  
@@ -19,7 +19,7 @@ def get_students():
         data.append(row)
     return data
 
-def get_student(id_student):
+def get(id_student):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_student, first_name, second_name, id_class 
@@ -29,3 +29,13 @@ def get_student(id_student):
     for row in cursor.fetchall():
         data.append(row)
     return data
+
+def update(id_student, first_name, second_name, id_class):
+    conn = sqlite3.connect('alisa.db')
+    cursor = conn.cursor()
+    cursor.execute('''UPDATE students SET first_name = ?,
+                        second_name = ?, 
+                        id_class = ?
+                        WHERE  id_student = ?''',
+                   (first_name, second_name, id_class,id_student))
+    conn.commit()

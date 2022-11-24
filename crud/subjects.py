@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def insert_subject(subj):
+def insert(subj):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute(
@@ -9,7 +9,8 @@ def insert_subject(subj):
         (subj,))
     conn.commit()
 
-def get_subjects():
+
+def get_all():
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_subject, subject
@@ -19,7 +20,8 @@ def get_subjects():
         data.append(row)
     return data
 
-def get_subject(id_subject):
+
+def get(id_subject):
     conn = sqlite3.connect('alisa.db')
     cursor = conn.cursor()
     cursor.execute('''SELECT id_subject, subject 
@@ -29,3 +31,11 @@ def get_subject(id_subject):
     for row in cursor.fetchall():
         data.append(row)
     return data
+
+
+def update(id_subject, subj):
+    conn = sqlite3.connect('alisa.db')
+    cursor = conn.cursor()
+    cursor.execute('''UPDATE subjects SET subject = ?
+                        WHERE  id_subject = ?''', (subj, format(id_subject)))
+    conn.commit()

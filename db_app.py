@@ -125,25 +125,42 @@ def delete(id):
 # read('schedule')
 # update('students')
 
-
-# subjects.insert_subject('Программирование')
+'''тестирование insert'''
+# subjects.insert('Программирование')
 # read('subjects')
-# classes.insert_classes(2,'Г')
+# classes.insert(2,'Г')
 # read('classes')
-# students.insert_student('Андрей', 'Миронов', 8)
+# students.insert('Андрей', 'Миронов', 8)
 # read('students')
-# scheduler.insert_schedule(1, '09:00', 2, 2)
+# scheduler.insert(1, '09:00', 2, 2)
 # read('schedule')
 
-# print(classes.get_classes())
-# print(classes.get_class(1))
-# print(scheduler.get_schedules())
-# print(scheduler.get_schedule(1))
+'''тестирование SELECT get_all по всей таблице,  get для конкретного id'''
+# print(classes.get_all())
+# print(classes.get(1))
+# print(scheduler.get__all())
+# print(scheduler.get_(1))
 
-# print(students.get_students())
-# print(students.get_student(3))
+# print(students.get_all())
+# print(students.get(3))
 #
-# print(subjects.get_subjects())
-# print(subjects.get_subject(2))
+# print(subjects.get_all())
+# print(subjects.get(2))
+
+'''тестирование  Update'''
+# subjects.update(2, 'арифм-а')
+# read('subjects')
+
+# read('students')
+# students.update(2, 'владислав', 'Петров', 1)
+# read('students')
+
+# read('schedule')
+# scheduler.update(1, 1, '19:00', 2, 2)
+# read('schedule')
+
+read('classes')
+classes.update(1, 1, 'Ж')
+read('classes')
 
 exit()
