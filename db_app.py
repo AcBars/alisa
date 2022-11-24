@@ -132,7 +132,18 @@ def delete(id):
 # read('classes')
 # students.insert_student('Андрей', 'Миронов', 8)
 # read('students')
-scheduler.insert_schedule(1, '09:00', 2, 2)
-read('schedule')
+# scheduler.insert_schedule(1, '09:00', 2, 2)
+# read('schedule')
+
+# print(classes.get_classes())
+# print(classes.get_class(1))
+# print(scheduler.get_schedules())
+# print(scheduler.get_schedule(1))
+
+# print(students.get_students())
+# print(students.get_student(3))
+#
+# print(subjects.get_subjects())
+# print(subjects.get_subject(2))
 
 exit()

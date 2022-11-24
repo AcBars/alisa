@@ -22,8 +22,8 @@ def get_class(id_class):
     cursor = conn.cursor()
     cursor.execute('''SELECT id_class, level, symbol 
                         FROM classes 
-                        WHERE  = {}'''.format(id_class))
+                        WHERE  id_class = {}'''.format(id_class))
     data = []
-    for row in c.fetchall():
+    for row in cursor.fetchall():
         data.append(row)
     return data
