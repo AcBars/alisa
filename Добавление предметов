@@ -1,0 +1,19 @@
+def add_subject(id_subject, subject):
+    try:
+        connection = sqlite3.connect('alisa.db')
+
+        cursor = connection.cursor()
+
+        print("База данных создана и успешно подключена к SQLite")
+
+        data = [id_subject, subject]
+        cursor.execute(f"INSERT INTO subjects VALUES(?, ?);", data)
+        connection.commit()
+        cursor.close()  
+
+    except sqlite3.Error as error:
+        print("Ошибка при подключении к sqlite", error)
+    finally:
+        if (connection):
+            connection.close()
+            print("Соединение с SQLite закрыто")
