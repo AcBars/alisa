@@ -1,4 +1,15 @@
 import sqlite3
+from enum import Enum
+
+
+class Weekday(Enum):
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+    SATURDAY = 6
+    SUNDAY = 7
 
 
 def create_db():
@@ -51,6 +62,26 @@ def read(table):
             print("Соединение с SQLite закрыто")
 
 
+def update(table):
+    try:
+        connect = sqlite3.connect('alisa.db')
+        cursor = connect.cursor()
+        print("Подключен к SQLite")
+
+        update = """Update table set  field1= ? where id = ?"""
+        cursor.execute(update, 2, 1)
+        connect.commit()
+        print("Запись успешно обновлена")
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
+    finally:
+        if connect:
+            connect.close()
+            print("Соединение с SQLite закрыто")
+
+
 def get_version():
     try:
         connection = sqlite3.connect('alisa.db')
@@ -72,8 +103,34 @@ def get_version():
             connection.close()
             print("Соединение с SQLite закрыто")
 
+
+def add():
+    try:
+        connect = sqlite3.connect('alise.db')
+        cursor = connect.cursor()
+        print("Подключен к SQLite")
+
+        insert = """INSERT INTO schedule
+                              (id, day_of_week, time_start, id_class, id_subject)
+                              VALUES
+                              ( '' , Weekday.MONDAY, '10:00', 1, 1);"""
+
+        count = cursor.execute(insert)
+        connect.commit()
+        print("Запись успешно вставлена таблицу sqlitedb_developers ", cursor.rowcount)
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
+    finally:
+        if connect:
+            connect.close()
+            print("Соединение с SQLite закрыто")
+
 # get_version()
 # read('students')
 # read('subjects')
 # read('classes')
+# read('schedule')
+# update('students')
 # exit()
