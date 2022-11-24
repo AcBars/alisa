@@ -127,6 +127,25 @@ def add():
             connect.close()
             print("Соединение с SQLite закрыто")
 
+def delete(id):
+    try:
+        connect = sqlite3.connect('sqlite_python.db')
+        cursor = connect.cursor()
+        print("Подключен к SQLite")
+
+        deletion = """DELETE from sqlitedb_developers where id = ?"""
+        cursor.execute(deletion, (id,))
+        connect.commit()
+        print("Запись успешно удалена")
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
+    finally:
+        if connect:
+            connect.close()
+            print("Соединение с SQLite закрыто")
+
 # get_version()
 # read('students')
 # read('subjects')
