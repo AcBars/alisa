@@ -1,5 +1,8 @@
 import sqlite3
 from enum import Enum
+import crud.subjects
+import crud.classes
+
 
 
 class Weekday(Enum):
@@ -11,7 +14,8 @@ class Weekday(Enum):
     SATURDAY = 6
     SUNDAY = 7
 
-
+# connection = sqlite3.connect('alisa.db')
+# cursor = connection.cursor()
 def create_db():
     # создание БД alisa
     # attractive little info system application
@@ -104,28 +108,6 @@ def get_version():
             print("Соединение с SQLite закрыто")
 
 
-def add():
-    try:
-        connect = sqlite3.connect('alise.db')
-        cursor = connect.cursor()
-        print("Подключен к SQLite")
-
-        insert = """INSERT INTO schedule
-                              (id, day_of_week, time_start, id_class, id_subject)
-                              VALUES
-                              ( '' , Weekday.MONDAY, '10:00', 1, 1);"""
-
-        count = cursor.execute(insert)
-        connect.commit()
-        print("Запись успешно вставлена таблицу sqlitedb_developers ", cursor.rowcount)
-        cursor.close()
-
-    except sqlite3.Error as error:
-        print("Ошибка при работе с SQLite", error)
-    finally:
-        if connect:
-            connect.close()
-            print("Соединение с SQLite закрыто")
 
 def delete(id):
     try:
@@ -146,10 +128,17 @@ def delete(id):
             connect.close()
             print("Соединение с SQLite закрыто")
 
+
+
+
 # get_version()
 # read('students')
 # read('subjects')
 # read('classes')
 # read('schedule')
 # update('students')
-# exit()
+
+
+# crud.subjects.insert_subject('Программирование')
+# crud.classes.insert_classes(2,'Г')
+exit()
