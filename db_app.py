@@ -1,13 +1,6 @@
 import sqlite3
-from enum import Enum
-from crud import subjects
-from crud import classes
-from crud import students
-from crud import scheduler
 
 
-# connection = sqlite3.connect('alisa.db')
-# cursor = connection.cursor()
 def create_db():
     # создание БД alisa
     # attractive little info system application
@@ -143,52 +136,52 @@ def check_table_fields(table, fields_dict):
     finally:
         if (connection):
             connection.close()
-            print("Соединение с SQLite закрыто")
-            return founded
+            # print("Соединение с SQLite закрыто")
 
 
-# get_version()
-read('schedule')
-f_d = {'id_schedule': 1, 'id_week': 1, 'time_start': '15:00', 'id_class': 1, 'id_subject': 1}
-print(check_table_fields('schedule', f_d))
-# update('students')
+def crud(action, table, fields_dict):
+    if not check_table_fields(table, fields_dict):
+        return False
+    try:
+        connection = sqlite3.connect('alisa.db', timeout=20)
+        cursor = connection.cursor()
+        query = create_query(action, table, fields_dict)
+        # print(query)
+        cursor.execute(query)
+        # selected = cursor.fetchall()
+        connection.commit()
+        connection.close()
+        return fields_dict
+    except sqlite3.Error as error:
+        print("Ошибка при подключении к sqlite", error)
+    # finally:
+    #     if (connection):
+    #         connection.close()
+    #         #print("Соединение с SQLite закрыто")
 
-'''тестирование insert'''
-# subjects.insert('Программирование')
-# read('subjects')
-# classes.insert(2,'Г')
-# read('classes')
-# students.insert('Андрей', 'Миронов', 8)
-# read('students')
-# scheduler.insert(1, '09:00', 2, 2)
-# read('schedule')
 
-'''тестирование SELECT get_all по всей таблице,  get для конкретного id'''
-# print(classes.get_all())
-# print(classes.get(1))
-# print(scheduler.get__all())
-# print(scheduler.get_(1))
+def create_query(action, table, fields_as_dict):
+    if action.lower() == 'insert':
+        query = 'INSERT INTO {} ('.format(table)
+        for key in fields_as_dict:
+            query += '{}, '.format(key)
+        query = query.rstrip(', ')
+        query += ') VALUES ('
+        for key, val in fields_as_dict.items():
+            if type(val) == str:
+                query += "'{}',".format(val)
+            else:
+                query += "{},".format(val)
+        query = query.rstrip(',')
+        query += ')'
+    if action.lower() == 'update':
+        print('update')
+    if action.lower() == 'delete':
+        print('delete')
+    return query
 
-# print(students.get_all())
-# print(students.get(3))
-#
-# print(subjects.get_all())
-# print(subjects.get(2))
 
-'''тестирование  Update'''
-# subjects.update(2, 'арифм-а')
-# read('subjects')
-
-# read('students')
-# students.update(2, 'владислав', 'Петров', 1)
-# read('students')
-
-# read('schedule')
-# scheduler.update(1, 1, '19:00', 2, 2)
-# read('schedule')
-
-# read('classes')
-# classes.update(1, 1, 'Ж')
-# read('classes')
+print(crud('insert', 'classes', {'level': 5, 'symbol': 'Г'}))
+read('classes')
 
 exit()
