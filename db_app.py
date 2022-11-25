@@ -1,18 +1,11 @@
 import sqlite3
 from enum import Enum
-import crud.subjects
-import crud.classes
+from crud import subjects
+from crud import classes
+from crud import students
+from crud import scheduler
 
 
-
-class Weekday(Enum):
-    MONDAY = 1
-    TUESDAY = 2
-    WEDNESDAY = 3
-    THURSDAY = 4
-    FRIDAY = 5
-    SATURDAY = 6
-    SUNDAY = 7
 
 # connection = sqlite3.connect('alisa.db')
 # cursor = connection.cursor()
@@ -108,7 +101,6 @@ def get_version():
             print("Соединение с SQLite закрыто")
 
 
-
 def delete(id):
     try:
         connect = sqlite3.connect('sqlite_python.db')
@@ -129,16 +121,46 @@ def delete(id):
             print("Соединение с SQLite закрыто")
 
 
-
-
 # get_version()
-# read('students')
-# read('subjects')
-# read('classes')
 # read('schedule')
 # update('students')
 
+'''тестирование insert'''
+# subjects.insert('Программирование')
+# read('subjects')
+# classes.insert(2,'Г')
+# read('classes')
+# students.insert('Андрей', 'Миронов', 8)
+# read('students')
+# scheduler.insert(1, '09:00', 2, 2)
+# read('schedule')
 
-# crud.subjects.insert_subject('Программирование')
-# crud.classes.insert_classes(2,'Г')
+'''тестирование SELECT get_all по всей таблице,  get для конкретного id'''
+# print(classes.get_all())
+# print(classes.get(1))
+# print(scheduler.get__all())
+# print(scheduler.get_(1))
+
+# print(students.get_all())
+# print(students.get(3))
+#
+# print(subjects.get_all())
+# print(subjects.get(2))
+
+'''тестирование  Update'''
+# subjects.update(2, 'арифм-а')
+# read('subjects')
+
+# read('students')
+# students.update(2, 'владислав', 'Петров', 1)
+# read('students')
+
+# read('schedule')
+# scheduler.update(1, 1, '19:00', 2, 2)
+# read('schedule')
+
+read('classes')
+classes.update(1, 1, 'Ж')
+read('classes')
+
 exit()
