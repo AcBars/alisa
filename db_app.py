@@ -6,7 +6,6 @@ from crud import students
 from crud import scheduler
 
 
-
 # connection = sqlite3.connect('alisa.db')
 # cursor = connection.cursor()
 def create_db():
@@ -42,15 +41,12 @@ def read(table):
         cursor = connection.cursor()
         print("Подключен к SQLite")
 
-        # query = 'SELECT * FROM ' + table + ' LIMIT 0, 49999;'
         query = 'SELECT * FROM ' + table + ' LIMIT 0, 49999;'
         cursor.execute(query)
         # cursor.execute(query, (table,))
         selected = cursor.fetchall()
         print(f"{table} : {selected}")
-        # print(cursor)
         cursor.close()
-
     except sqlite3.Error as error:
         print("Ошибка при подключении к sqlite", error)
     finally:
@@ -65,7 +61,7 @@ def update(table):
         cursor = connect.cursor()
         print("Подключен к SQLite")
 
-        update = """Update table set  field1= ? where id = ?"""
+        update = """Update table set  field1 = ? where id = ?"""
         cursor.execute(update, 2, 1)
         connect.commit()
         print("Запись успешно обновлена")
@@ -121,8 +117,40 @@ def delete(id):
             print("Соединение с SQLite закрыто")
 
 
+def check_table_fields(table, fields_dict):
+    try:
+        connection = sqlite3.connect('alisa.db', timeout=20)
+        cursor = connection.cursor()
+        query = 'pragma  table_info({});'.format(table)
+        cursor.execute(query)
+        selected = cursor.fetchall()
+
+        for key in fields_dict:
+            for fields in selected:
+                founded = False
+                if key in fields:
+                    founded = True
+                    break
+            if not founded:
+                print('что-то не так с наименованиями полей')
+                cursor.close()
+                return founded
+        # print(f"{table} : {selected}")
+        cursor.close()
+        return founded
+    except sqlite3.Error as error:
+        print("Ошибка при подключении к sqlite", error)
+    finally:
+        if (connection):
+            connection.close()
+            print("Соединение с SQLite закрыто")
+            return founded
+
+
 # get_version()
-# read('schedule')
+read('schedule')
+f_d = {'id_schedule': 1, 'id_week': 1, 'time_start': '15:00', 'id_class': 1, 'id_subject': 1}
+print(check_table_fields('schedule', f_d))
 # update('students')
 
 '''тестирование insert'''
@@ -159,8 +187,8 @@ def delete(id):
 # scheduler.update(1, 1, '19:00', 2, 2)
 # read('schedule')
 
-read('classes')
-classes.update(1, 1, 'Ж')
-read('classes')
+# read('classes')
+# classes.update(1, 1, 'Ж')
+# read('classes')
 
 exit()
