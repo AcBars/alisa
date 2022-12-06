@@ -186,23 +186,24 @@ class TableModel(QAbstractTableModel):
         self._rows_to_add = set()
 
     def data(self, index, role):
-        if role in (Qt.ItemDataRole.DisplayRole, Qt.ItemDataRole.EditRole):
-            row = index.row()
-            col = index.column()
+        if role not in (Qt.ItemDataRole.DisplayRole, Qt.ItemDataRole.EditRole):
+            return
+        row = index.row()
+        col = index.column()
 
-            if (value := self._data[row][col]) and col > 0:
-                tables = self.parent.window().tables
-                table_id = self.title
-                header = HEADERS.get(table_id, [])
-                fk_table = FK_MAP.get(header[col], '')
-                if header[col].startswith('id') and fk_table in tables:
-                    id_desc = ID_DESCRIPTIONS.get(fk_table, (0, 0))
-                    if found_value := [row[id_desc[0]]
-                                       for row in tables[fk_table]._data
-                                       if row[id_desc[1]] == value]:
-                        return found_value[0]
+        if (value := self._data[row][col]) and col > 0:
+            tables = self.parent.window().tables
+            table_id = self.title
+            header = HEADERS.get(table_id, [])
+            fk_table = FK_MAP.get(header[col], '')
+            if header[col].startswith('id') and fk_table in tables:
+                id_desc = ID_DESCRIPTIONS.get(fk_table, (0, 0))
+                if found_value := [row[id_desc[0]]
+                                   for row in tables[fk_table]._data
+                                   if row[id_desc[1]] == value]:
+                    return found_value[0]
 
-            return self._data[row][col]
+        return self._data[row][col]
 
     def rowCount(self, index=None):
         return len(self._data)
@@ -261,32 +262,32 @@ class TableModel(QAbstractTableModel):
         self.parent.selectRow(row)
 
     def _remove(self):
-        indices = self.parent.selectedIndexes()
-        if indices:
-            deleted = set()
-            for index in indices:
-                row = index.row()
-                del_id = self._data[row][0]
-                if del_id in self._rows_to_add:
-                    self._rows_to_add.discard(del_id)
-                    result = True
-                else:
-                    result = db_app.crud('delete', self.title,
-                                         {'id': del_id})
-                    if result:
-                        deleted.add(del_id)
-                    else:
-                        break
-
-            if result:
-                self.removeRows(indices[0].row(), len(indices))
-                txt = f'Successfully deleted rows with ids:' \
-                      f' {", ".join(map(str, deleted))}.'
+        if not (indices := self.parent.selectedIndexes()):
+            return
+        deleted = set()
+        for index in indices:
+            row = index.row()
+            del_id = self._data[row][0]
+            if del_id in self._rows_to_add:
+                self._rows_to_add.discard(del_id)
+                result = True
             else:
-                txt = f'Error deleting rows with ids:' \
-                      f' {", ".join(map(str, set(indices).difference(deleted)))}.'
+                result = db_app.crud('delete', self.title,
+                                     {'id': del_id})
+                if result:
+                    deleted.add(del_id)
+                else:
+                    break
 
-            show_message(txt)
+        if result:
+            self.removeRows(indices[0].row(), len(indices))
+            txt = f'Successfully deleted rows with ids:' \
+                  f' {", ".join(map(str, deleted))}.'
+        else:
+            txt = f'Error deleting rows with ids:' \
+                  f' {", ".join(map(str, set(indices).difference(deleted)))}.'
+
+        show_message(txt)
 
     def _submit(self):
         header = HEADERS.get(self.title, [])
@@ -294,8 +295,7 @@ class TableModel(QAbstractTableModel):
             header = header[:-1]
         rows_to_add = self._rows_to_add.copy()
         for add_id in rows_to_add:
-            rows = [row for row in self._data if row[0] == add_id]
-            if rows:
+            if rows := [row for row in self._data if row[0] == add_id]:
                 table_row = rows[0]
                 if db_insert(self.title, table_row, header):
                     self._rows_to_add.discard(add_id)
@@ -350,8 +350,7 @@ class ComboDelegate(QStyledItemDelegate):
         items = []
         col = index.column()
         if col > 0:
-            fk_table = FK_MAP.get(header[col], '')
-            if fk_table:
+            if fk_table := FK_MAP.get(header[col], ''):
                 id_desc = ID_DESCRIPTIONS.get(fk_table, (0, 0))
                 items = [(row[id_desc[0]], row[id_desc[1]]) for row in tables[fk_table]._data]
                 if fk_table != 'week':
