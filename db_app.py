@@ -9,7 +9,7 @@ def create_db():
         cursor = connection.cursor()
         print("База данных подключена к SQLite")
 
-        with open('alisa.sql', 'r') as sqlite_file:
+        with open('alisa.db.sql', 'r') as sqlite_file:
             sql_script = sqlite_file.read()
 
         cursor.executescript(sql_script)
@@ -38,8 +38,9 @@ def read(table):
         cursor.execute(query)
         # cursor.execute(query, (table,))
         selected = cursor.fetchall()
-        print(f"{table} : {selected}")
+        # print(f"{table} : {selected}")
         cursor.close()
+        return selected
     except sqlite3.Error as error:
         print("Ошибка при подключении к sqlite", error)
     finally:
@@ -90,20 +91,21 @@ def get_version():
             print("Соединение с SQLite закрыто")
 
 
-def delete(id):
+def delete(table, pk_id):
     try:
-        connect = sqlite3.connect('sqlite_python.db')
+        connect = sqlite3.connect('alisa.db', timeout=20)
         cursor = connect.cursor()
         print("Подключен к SQLite")
 
-        deletion = """DELETE from sqlitedb_developers where id = ?"""
-        cursor.execute(deletion, (id,))
+        deletion = """DELETE from ? where id = ?"""
+        cursor.execute(deletion, (table, pk_id))
         connect.commit()
         print("Запись успешно удалена")
         cursor.close()
-
+        return True
     except sqlite3.Error as error:
         print("Ошибка при работе с SQLite", error)
+        return False
     finally:
         if connect:
             connect.close()
@@ -151,9 +153,10 @@ def crud(action, table, fields_dict):
         # selected = cursor.fetchall()
         connection.commit()
         connection.close()
-        return fields_dict
+        return True
     except sqlite3.Error as error:
         print("Ошибка при подключении к sqlite", error)
+        return False
     # finally:
     #     if (connection):
     #         connection.close()
@@ -175,13 +178,23 @@ def create_query(action, table, fields_as_dict):
         query = query.rstrip(',')
         query += ')'
     if action.lower() == 'update':
-        print('update')
+        query = 'UPDATE {} '.format(table)
+        query += 'SET '
+        for key, val in fields_as_dict.items():
+            # if key == 'id':
+            #     continue
+            if type(val) == str:
+                query += "{} = '{}', ".format(key, val)
+            else:
+                query += "{} = {}, ".format(key, val)
+        query = query.rstrip(', ')
+        query += ' WHERE id = {}'.format(fields_as_dict['id'])
     if action.lower() == 'delete':
-        print('delete')
+        query = 'DELETE FROM {} '.format(table)
+        query += 'WHERE id = {}'.format(fields_as_dict['id'])
     return query
 
-
-print(crud('insert', 'classes', {'level': 5, 'symbol': 'Г'}))
-read('classes')
-
-exit()
+# print(crud('insert', 'classes', {'level': 5, 'symbol': 'Г'}))
+# read('classes')
+#
+# exit()
