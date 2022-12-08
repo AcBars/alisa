@@ -12,7 +12,7 @@
   * first_name (_Имя учащегося_)
   * last_name()
   * id_class()
-* ###Classes ####()
+* ###Classes 
   * id (_Идентификационный номер записи_)
   * level (_Класс_)
   * symbol (_Буква_)
